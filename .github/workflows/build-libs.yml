@@ -95,10 +95,10 @@ jobs:
           unzip -q "app/bergamot/build/outputs/aar/bergamot-aarch64-release.aar" -d "${STAGE}"
           for flavor in armeabi-v7a x86 x86_64; do
             abi="${flavor}"
-            unzip -p "app/bergamot/build/outputs/aar/bergamot-${flavor}-release.aar" \
-                  "jni/${abi}/libbergamot-sys.so" > "${STAGE}/jni/${abi}/__tmp"
             mkdir -p "${STAGE}/jni/${abi}"
-            mv "${STAGE}/jni/${abi}/__tmp" "${STAGE}/jni/${abi}/libbergamot-sys.so"
+            unzip -p "app/bergamot/build/outputs/aar/bergamot-${flavor}-release.aar" \
+                  "jni/${abi}/libbergamot-sys.so" \
+                  > "${STAGE}/jni/${abi}/libbergamot-sys.so"
           done
           (cd "${STAGE}" && zip -qr "${OUT_DIR}/bergamot-sys.aar" .)
           rm -rf "${STAGE}"
