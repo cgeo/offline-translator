@@ -1,0 +1,29 @@
+# JitPack configuration for cgeo/offline-translator.
+#
+# Building the native libraries requires Docker and the Android NDK, which
+# the JitPack build environment cannot provide. Instead, we publish a
+# prebuilt AAR (+ POM) as GitHub Release assets via
+# .github/workflows/build-libs.yml, and JitPack installs those assets into
+# its local Maven repository.
+#
+# Consumers declare the dependency as:
+#   implementation("com.github.cgeo:offline-translator:<tag>")
+# and add https://jitpack.io to their repositories.
+
+jdk:
+  - openjdk17
+
+install:
+  - |
+    set -euo pipefail
+    GROUP_PATH="com/github/cgeo"
+    ARTIFACT="offline-translator"
+    TARGET="${HOME}/.m2/repository/${GROUP_PATH}/${ARTIFACT}/${VERSION}"
+    BASE_URL="https://github.com/cgeo/offline-translator/releases/download/${VERSION}"
+    mkdir -p "${TARGET}"
+    curl --fail --location --silent --show-error \
+      --output "${TARGET}/${ARTIFACT}-${VERSION}.aar" \
+      "${BASE_URL}/bergamot-sys.aar"
+    curl --fail --location --silent --show-error \
+      --output "${TARGET}/${ARTIFACT}-${VERSION}.pom" \
+      "${BASE_URL}/bergamot-sys.pom"
