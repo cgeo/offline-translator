@@ -1,3 +1,23 @@
+# c:geo note
+This is a fork of [David Ventura's offline translator](https://github.com/DavidVentura/offline-translator), but only a small portion of this is used by c:geo, to build native libraries for Android to support in-app offline translation.
+
+We are using the [armv7-2](https://github.com/cgeo/offline-translator/tree/armv7-2) branch, which contains some necessary fixes that are currently not part of `master` branch (as of May 2026).
+On top of the original branch we added a fix for [running those libraries in x64-based emulators not supporting AVX2](https://github.com/cgeo/offline-translator/pull/1), and for [building in Linux environments](https://github.com/cgeo/offline-translator/pull/2).
+
+Native libraries are built using a GitHub action (documented [here](https://github.com/cgeo/offline-translator/pull/3#issue-4447476081)) and are made available via Jitpack.
+
+Integration into c:geo (and other apps) can be done by including the following lines into `build.gradle`:
+```
+repositories { maven("https://jitpack.io") }
+dependencies {
+    implementation("com.github.cgeo:offline-translator:v0.2.6-cgeo.1")
+}
+```
+ 
+---
+
+Following is the original `README.md` file:
+
 <h1><center>Translator</center></h1>
 
 An Android translator app that performs text, PDF/ODT documents and image translation completely offline using on-device models.
