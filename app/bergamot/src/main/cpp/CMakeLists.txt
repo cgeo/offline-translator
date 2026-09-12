@@ -65,6 +65,20 @@ if (ANDROID_ABI STREQUAL "x86_64")
   # not expose AVX2.
   set(BUILD_ARCH "x86-64" CACHE STRING "Build architecture" FORCE)
 endif ()
+if (ANDROID_ABI STREQUAL "x86")
+  # Same for 32 bit x86. Without a pin BUILD_ARCH stays at its default
+  # "native", so the build machine's own CPU features end up in the .so.
+  # That is how AVX got into the shipped library and made it die with
+  # SIGILL in a static initializer on emulator images that have no AVX.
+  # See cgeo/cgeo#18593.
+  #
+  # "penryn" is the lowest CPU that still builds marian: functional/
+  # operators.h calls _mm_floor_ps() and _mm_round_ps() unguarded, so
+  # SSE4.1 is a hard requirement. penryn is exactly SSE4.1 and stops
+  # short of AVX. The Android x86 default of i686 plus SSSE3 does not
+  # compile, and anything above penryn would let AVX back in.
+  set(BUILD_ARCH "penryn" CACHE STRING "Build architecture" FORCE)
+endif ()
 
 # marian-dev builds some other targets
 set(COMPILE_LIBRARY_ONLY ON CACHE BOOL "" FORCE)
